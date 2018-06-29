@@ -1,0 +1,212 @@
+/**
+*	General
+*/
+
+html {
+	width: 100%;
+	height: 100%;
+}
+
+body {
+	width: 100%;
+	height: 100%;
+	margin: 0;
+	padding: 0;
+	font-family: sans-serif;
+}
+
+input[type="text"], input[type="password"] {
+	border: 1px solid #9f9f9f;
+	padding: 1em 1em 1em 1em;
+	margin: .2em;
+}
+
+.action-button {
+	border: 1px solid #9f9f9f;
+	background-color: #0000cc;
+	padding: 1em 1em 1em 1em;
+	color: white;
+	text-align: center;
+	font-family: sans-serif;
+	cursor: pointer;
+}
+
+.content {
+	width: 100%;
+	height: 100%;
+	position: fixed;
+	top: 0;
+	right: 0;
+	bottom: 0;
+	left: 0;
+	background: linear-gradient(white 20%, rgba(169, 169, 169, .2));
+}
+
+.title {
+	background-color: #0000cc;
+	color: #ffffff;
+	margin: -1em -1em 1em -1em;
+	padding: 1em;
+}
+
+/**
+*	Login
+*/
+
+#login-content {
+	display: flex;
+	align-items: center;
+}
+
+#login-box {
+	border: 1px solid #9f9f9f;
+	width: 20em;
+	margin: 0 auto;
+	padding: 1em;
+}
+
+#login_btn, #register_btn {
+	margin-top: 1em;
+}
+
+#login-box > form > input {
+	width: 18rem;
+}
+
+#login {
+	width: 100%;
+	transform: translateY(-30%);
+}
+
+#selector {
+	font-size: .8em;
+	color: #0000cc;
+	text-align: center;
+	margin: 1em;
+}
+
+#selector > a {
+	cursor: pointer;
+	margin: 0 .3em 0 .3em;
+}
+
+#selector > a.active {
+	border-bottom: 1px solid currentColor;
+}
+
+#register-form {
+	display: none;
+}
+
+#error {
+	width: 80%;
+	height: 3em;
+	background-color: #e60000;
+	display: none;
+	border: 1px solid #9f9f9f;
+	text-align: center;
+	line-height: 3em;
+	color: white;
+	position: absolute;
+	top: 0;
+	left: 10%;
+}	
+
+
+/**
+* Profile
+*/
+
+#intro-well {
+	padding: 1em;
+	border-bottom: 1px solid #9f9f9f;
+	display: flex;
+	justify-content: space-between;
+	box-shadow: 0 0 3px 0 rgba(0, 0, 0, .75);
+}
+
+#intro-text {
+	line-height: 3em;
+}
+
+#intro-well > form > .action-button {
+	font-weight: bold;
+}
+
+#calendar {
+	display: flex;
+	flex-flow: column;
+}
+
+#date-select {
+	border: 1px solid #9f9f9f;
+	display: inline-block;
+	padding: 1em;
+	margin: 0 0 1em 0;
+	box-shadow: 0 0 3px 0 rgba(0, 0, 0, .75);
+}
+
+#controls {
+	height: 100%;
+	display: flex;
+	flex-flow: column;
+	margin-right: 1em;
+}
+
+#date-submit {
+	margin-top: 1em;
+}
+
+#date-comment {
+	width: 30em;
+	margin: .2em 0 0 0;
+}
+
+#date-from, #date-to {
+	margin: 0 0 .2em 0;
+}
+
+#date-from {
+	margin-right: .2em;
+}
+
+#dates-off {
+	border: 1px solid #9f9f9f;
+	padding: 1em;
+	height: 100%;
+	overflow: auto;
+	box-shadow: 0 0 3px 0 rgba(0, 0, 0, .75);
+}
+
+#dates-off-content > div {
+	background-color: #009933;
+	color: #ffffff;
+	padding: 1em;
+	margin-bottom: .2em;
+}
+
+#dates-off-content > div > div {
+	float: right;
+	background-image: url("../assets/closebutton.png");
+	width: 1.5em;
+	height: 1.5em;
+	background-size: 100%;
+}
+
+
+#dates-off-content > div:first-child {
+	margin-top: 1em;
+}
+
+#vacation-content {
+	display: flex;
+	flex-flow: column;
+	height: 100%;
+}
+
+#content-wrapper {
+	display: flex;
+	flex-flow: row;
+	flex-grow: 1;
+	padding: 1em;
+}

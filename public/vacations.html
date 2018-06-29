@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+
+<html>
+	<head>
+		<link rel="stylesheet" type="text/css" href="./css/style.css">
+		<link rel="stylesheet" type="text/css" href="./css/fullcalendar.css">
+		<link rel="stylesheet" type="text/css" href="./css/datepicker.css">
+	</head>
+	<body>
+
+		<div id="vacation-content" class="content">
+			<div id="error"></div>
+			<div id="intro-well">
+				<div id="intro-text"></div>
+				<form action="/logout" method="get">
+					<input class="action-button" value="Log Out" type="submit"></input>
+				</form>
+			</div>
+			<div id="content-wrapper">
+				<div id="controls">
+					<div id="date-select">
+							<div class="title">
+								When would you like your days off?
+							</div>
+							<input id="date-from" data-toggle="datepicker" type="text" placeholder="Start"></input>
+							<input id="date-to" data-toggle="datepicker" type="text" placeholder="End"></input><br>
+							<input id="date-comment" type="text" placeholder="Comment"></input>
+							<div id="date-submit" class="action-button">Submit</div>
+					</div>
+					<div id="dates-off">
+						<div class="title">
+							Your planned days off:
+						</div>
+						<div id="dates-off-content">No days off planned.</div>	
+					</div>
+				</div>
+				<div id="calendar"></div>
+			</div>
+		</div>
+
+		<script src="./scripts/jquery.min.js"></script>
+		<script src="./scripts/moment.js"></script>
+		<script src="./scripts/fullcalendar.js"></script>
+		<script src="./scripts/datepicker.js"></script>
+		<script src="./scripts/invariant.js"></script>
+		<script src="./scripts/popups.js"></script>
+		<script src="./scripts/vacations.js"></script>
+
+	</body>
+</html>

@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+
+<html>
+	<head>
+		<link rel="stylesheet" type="text/css" href="./css/style.css">
+	<head>
+	<body>
+		<div id="login-content" class="content">
+			<div id="error"></div>
+			<div id="login">
+					<div id="login-box">
+						<form id="login-form" action="#" method="post">
+							<input id="log_name" placeholder="Name" required="" type="text">
+							<input id="log_password" placeholder="Password" required="" type="password">
+
+							<div id="login_btn" class="action-button"> Log In </div>
+						</form>
+						<form id="register-form" action="#" method="post">
+							<input id="reg_name" placeholder="Name" required="" type="text">
+							<input id="reg_password" placeholder="Password" required="" type="password">
+							<input id="reg_password_conf" placeholder="Confirm Password" required="" type="password">
+							<div id="register_btn" class="action-button"> Register </div>
+						</form>
+					</div>
+					<div id="selector">
+						<a id="login-link" class="active"> login </a>
+						|
+						<a id="register-link"> register </a>
+					</div>
+			</div>
+		</div>
+
+		<script src="./scripts/jquery.min.js"></script>
+		<script src="./scripts/popups.js"></script>
+		<script src="./scripts/invariant.js"></script>
+		<script src="./scripts/login.js"></script>
+	</body>
+</html>

@@ -1,0 +1,21 @@
+{
+  "name": "futuresoft",
+  "version": "1.0.0",
+  "description": "vacation management system",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Martin Salapatev",
+  "license": "ISC",
+  "dependencies": {
+    "@fengyuanchen/datepicker": "^0.6.5",
+    "bcrypt": "^2.0.1",
+    "express": "^4.16.3",
+    "express-session": "^1.15.6",
+    "fullcalendar": "^3.9.0",
+    "jquery": "^3.3.1",
+    "moment": "^2.22.2",
+    "mongoose": "^5.1.6"
+  }
+}
