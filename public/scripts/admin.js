@@ -109,29 +109,28 @@ $( document ).ready( function () {
 
 		} );
 
-		next();
-
-	} );
-	
-	view.render( "#stats-content", function ( state, next ) {
-
-		console.log( "here" );
-
 	} );
 	
 	model.request( "/admin/pending", function ( state, response ) {
-		
+
+		console.log( response );
+	
+		if ( response.length <= 0 )
+			return state.pending = false;
+				
 		state.pending = response;	
 
 	} );
 
 	model.request( "/vacations", function ( state, response ) {
-
+		console.log( "vacations" );
 		state.name = response.name;
 		state.events = [];
 		for ( let event of response.events )
-			if ( event.status === "accepted" )
+			if ( event.status === "accepted" ) {
+				event.end = moment( event.end ).add( 1, "days" );
 				state.events.push( event );
+			}
 		state.id = response.id;
 		state.days = [];
 		for ( let event of response.events )
@@ -142,12 +141,10 @@ $( document ).ready( function () {
 	} );
 
 	const stats_func = function ( state, response ) {
-		console.log( response );		
+		console.log( $( "#stats_content > table" ) );
+		$( "#stats-content > table" ).replaceWith( Mustache.render( stats_mst, { stats: response } ) );
 	}	
 	
-	const stats_data = { data: { from: $( "#date-from" ).val(), to: $( "#date-to" ).val() }, method: "post" };  
-
-
 	$( "[data-toggle='datepicker']" ).datepicker();
 
 	$( "#date-to" ).datepicker( "setDate", moment().endOf( "year" ).format( "MM/DD/YYYY" ) );
@@ -157,12 +154,15 @@ $( document ).ready( function () {
 
 	$( "#date-from" ).on( "pick.datepicker", ( event ) => {
 		$ ( "#date-to" ).datepicker( "setStartDate", event.date );
-		model.request( "/admin/stats", stats_func, stats_data );
+		model.request( "/admin/stats", stats_func, { data: { from: event.date, to: $( "#date-to" ).val() }, method: "post" } );
 	} );
 
 	$( "#date-to" ).on( "pick.datepicker", ( event ) => {
 		$ ( "#date-from" ).datepicker( "setEndDate", event.date );
+		model.request( "/admin/stats", stats_func, { data: { from: $( "date-from" ).val(), to: event.date }, method: "post" } );
 	} );
+
+	const stats_data = { data: { from: $( "#date-from" ).val(), to: $( "#date-to" ).val() }, method: "post" };  
 
 	model.request( "/admin/stats", function ( state, response ) {
 		state.stats = response;

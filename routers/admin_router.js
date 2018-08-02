@@ -38,7 +38,7 @@ router.get( "/pending", function ( req, res, next ) {
 		var counter = 0;
 
 		if ( result.length === 0 )
-			return res.send( undefined );
+			return res.send( [] );
 
 		for ( var i = 0, length = result.length; i < length; ++i ) {
 			
@@ -60,7 +60,8 @@ router.get( "/pending", function ( req, res, next ) {
 		
 		}
 		
-	}); 
+	});
+ 
 } );
 
 router.post( "/pending", function ( req, res, next ) {
@@ -78,6 +79,8 @@ router.post( "/stats", function ( req, res, next ) {
 	User.find().exec( ( error, users ) => {
 
 		index = 0;
+
+		if ( users.length <= 1 ) res.send( {} );
 
 		for ( let user of users ) {
 
@@ -98,12 +101,12 @@ router.post( "/stats", function ( req, res, next ) {
 					if ( moment( vacation.from ).isAfter( req.body.to ) ) return;
 
 					if ( moment( req.body.to ).isBefore( vacation.to ) ) {
-						total += moment( req.body.to ).diff( vacation.from, "days" );
+						total += moment( req.body.to ).diff( vacation.from, "days" ) + 1;
 						return;
 					}
 
 					if ( moment( req.body.from ).isAfter( vacation.from ) ) {
-						total += moment( vacation.to ).diff( req.body.from, "days" );
+						total += moment( vacation.to ).diff( req.body.from, "days" ) + 1;
 						return;
 					} 
 

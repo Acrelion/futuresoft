@@ -4,9 +4,13 @@ const user = require( "../models/user" );
 const auth = require( "../authentication" );
 const path = require( "path" );
 
-
 router.get( "/", function ( req, res, next ) {
-	return res.sendFile( path.join( __dirname + "/../public/login.html" ) );
+	user.findOne( { role: "admin" } ).exec( function ( error, admin ) {
+		if ( admin == null ) 
+			return res.sendFile( path.join( __dirname + "/../html/admin_reg.html" ) );
+		else
+			return res.sendFile( path.join( __dirname + "/../html/login.html" ) );				
+	} );
 } );
 
 router.use( "/profile", auth.set_permission( ( user ) => user !== undefined ) );

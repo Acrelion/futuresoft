@@ -27,9 +27,11 @@
 							<div class="title">
 								Create an employee account.
 							</div>
-							<input id="reg_name" placeholder="Name" required="" type="text"> </br>
-							<input id="reg_password" placeholder="Password" required="" type="password"> </br>
-							<input id="reg_password_conf" placeholder="Confirm Password" required="" type="password"></br>
+							<div>
+								<input id="reg_name" placeholder="Name" required="" type="text"> </br>
+								<input id="reg_password" placeholder="Password" required="" type="password"> </br>
+								<input id="reg_password_conf" placeholder="Confirm Password" required="" type="password"></br>
+							</div>
 							<div id="register_btn" class="action-button"> Register </div>
 					</div>
 					<div id="pending_approval" class="box">
@@ -49,6 +51,9 @@
 								</div>
 							</div>
 							{{/pending}}
+							{{^pending}}
+								No request pending approval.
+							{{/pending}}
 						</div>
 					</div>
 				</div>
@@ -61,7 +66,7 @@
 						<input id="date-to" data-toggle="datepicker" type="text" placeholder="End" readonly></input><br>
 					</div>
 					<div id="stats-content">
-						<table>
+						<table>	
 							<tbody>
 								<!-- {{#stats}} -->
 								<tr>

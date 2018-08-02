@@ -135,8 +135,11 @@ $( document ).ready( function () {
 		state.name = response.name;
 		state.events = [];
 		for ( let event of response.events )
-			if ( event.status === "accepted" )
-				state.events.push( event );
+			if ( event.status === "accepted" ) {
+				var e = $.extend( true, {}, event );
+				e.end = moment( e.end ).add( 1, "days" );
+				state.events.push( e );
+			}
 		state.id = response.id;
 		state.days = [];
 		for ( let event of response.events )

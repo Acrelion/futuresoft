@@ -72,19 +72,27 @@ const registration = function ( req, res, next ) {
 
 	res.sendStatus( 200 );
 
-	let user_data = {
-		name: req.body.name,
-		password: req.body.password
-	}
+	user.findOne( { role: "admin" } ).exec( function ( error, admin ) {
+		var role = "user"
 
-	user.create( user_data, ( error, user ) => {
+		if ( admin == null ) 
+			role = "admin"
 		
-		if ( error )
-			return next ( error );
+		let user_data = {
+			name: req.body.name,
+			password: req.body.password,
+			role: role
+		}
 
+		user.create( user_data, ( error, user ) => {
+			if ( error )
+				return next ( error );
+
+		} );
+		
+		next();	
 	} );
-	
-	next();	
+			
 }
 
 const login = function ( req, res, next ) {
