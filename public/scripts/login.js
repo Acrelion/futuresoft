@@ -94,34 +94,7 @@ $( document ).ready( function () {
 				.add( $( "#register-link" ), () => form_switcher.select( $( "#register-form"  ) ) );
 
 
-	$( "#register_btn" ).click( function ( event ) {
-
-		const password = $( "#reg_password" ).val();
-		const name = $( "#reg_name" ).val();
-		const password_conf = $( "#reg_password_conf" ).val();
-
-		if( !validate_info( name, password, password_conf ) ) return;
-
-		$.ajax( {
-			url: "/",
-			type: "post",
-			data: {
-				type: "reg",
-				name: name,
-				password: password,
-				password_conf: password_conf
-			},
-			success: function ( response ) {
-				
-				message_popup.add( "Registration completed successfully. Please log in with your new credentials", "#009933" );
-				toggle_group.select( $( "#login-link" ) );
-				form_switcher.select( $( "#login-form" ) );	
-
-			},
-			
-		} );
-
-	} );
+	
 
 	$( "#login_btn" ).click( function ( event ) {
 

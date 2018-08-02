@@ -23,7 +23,7 @@ input[type="text"], input[type="password"] {
 
 .action-button {
 	border: 1px solid #9f9f9f;
-	background-color: #0000cc;
+	background-color: #0055cc;
 	padding: 1em 1em 1em 1em;
 	color: white;
 	text-align: center;
@@ -43,10 +43,19 @@ input[type="text"], input[type="password"] {
 }
 
 .title {
-	background-color: #0000cc;
+	background-color: #0055cc;
 	color: #ffffff;
 	margin: -1em -1em 1em -1em;
 	padding: 1em;
+}
+
+.box {
+	border: 1px solid #9f9f9f;
+	display: inline-block;
+	padding: 1em;
+	margin: 0 0 1em 0;
+	box-shadow: 0 0 3px 0 rgba(0, 0, 0, .75);
+
 }
 
 /**
@@ -80,7 +89,7 @@ input[type="text"], input[type="password"] {
 
 #selector {
 	font-size: .8em;
-	color: #0000cc;
+	color: #0055cc;
 	text-align: center;
 	margin: 1em;
 }
@@ -101,7 +110,7 @@ input[type="text"], input[type="password"] {
 #error {
 	width: 80%;
 	height: 3em;
-	background-color: #e60000;
+	background-color: #ff1c00;
 	display: none;
 	border: 1px solid #9f9f9f;
 	text-align: center;
@@ -146,10 +155,10 @@ input[type="text"], input[type="password"] {
 	box-shadow: 0 0 3px 0 rgba(0, 0, 0, .75);
 }
 
-#controls {
-	height: 100%;
+.controls {
 	display: flex;
 	flex-flow: column;
+	flex-grow: 1;
 	margin-right: 1em;
 }
 
@@ -179,18 +188,28 @@ input[type="text"], input[type="password"] {
 }
 
 #dates-off-content > div {
-	background-color: #009933;
+	background-color: #0055cc;
 	color: #ffffff;
 	padding: 1em;
 	margin-bottom: .2em;
 }
 
-#dates-off-content > div > div {
+#dates-off-content > .accepted {
+	background-color: #8eb209 !important;
+}
+
+#dates-off-content > .rejected {
+	background-color: #ff1c00;
+}
+
+.dates-remove {
 	float: right;
 	background-image: url("../assets/closebutton.png");
 	width: 1.5em;
 	height: 1.5em;
 	background-size: 100%;
+	margin-top: -.7em;
+	cursor: pointer;
 }
 
 
@@ -207,6 +226,99 @@ input[type="text"], input[type="password"] {
 #content-wrapper {
 	display: flex;
 	flex-flow: row;
-	flex-grow: 1;
 	padding: 1em;
+	overflow: hidden;
+	flex-grow: 1;
+}
+
+/**
+* Admin
+*/
+
+#create-account {
+	display: inline-grid;
+}
+
+#pending_approval_content {
+	padding: 1em;
+	margin-top: .3em;
+	background-color: #0055cc;
+	color: white;
+	display: flex;
+	flex-flow: column;
+}
+
+#pending_approval {
+	flex-grow: 0;
+	overflow: hidden;
+	display: flex;
+	flex-flow: column;
+	flex-grow: 1;
+}
+
+#stats {
+	margin-right: 1em;
+	overflow: hidden;
+	display: flex;
+	flex-flow: column;
+	padding: 0;
+}
+
+#stats > .title {
+	margin: 0;
+}
+
+#pending_wrapper {
+	margin: -1em;
+	padding: 1em;
+	overflow: auto;
+}
+
+#pending_approval_content:last-child {
+	margin-bottom: 1em;
+}
+
+#admin_controls {
+	width: 30%;
+	overflow: hidden;
+} 
+
+.pending_reject, .pending_agree {
+	display: inline-block;
+	float: left;
+	width: 1.5em;
+	height: 1.5em;
+	margin-left: -.3em;
+	margin-top: .8em;
+	cursor: pointer;
+}
+
+.pending_agree {
+	background-image: url("../assets/acceptbutton.png");
+	filter: invert(1);
+	background-size: 70%;
+	background-repeat: no-repeat;
+	background: center;
+}
+
+.pending_reject {
+	background-image: url("../assets/closebutton.png");
+	filter: brightness(.8);
+	background-size: 100%;
+	margin-left: .3em;
+}
+
+#stats-header {
+	border-bottom: 1px solid #9f9f9f;
+	box-shadow: 0 0 3px 0 rgba(0, 0, 0, .75);
+	padding: 1em;
+}
+
+#stats-content {
+	overflow: auto;
+}
+
+#stats-content > table > tbody > tr > td {
+	border-bottom: 1px solid #9f9f9f;
+	padding: .8em .8em .8em 2em;
 }

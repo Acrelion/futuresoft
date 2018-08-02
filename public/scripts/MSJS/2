@@ -1,0 +1,65 @@
+const express = require( "express" );
+const router = express.Router();
+const Vacation = require( "../models/vacation" );
+const User = require( "../models/user" );
+const auth = require( "../authentication" );
+const path = require( "path" );
+
+router.use( "/", auth.set_permission( ( user ) => {
+	
+	if ( user === undefined || user.role !== "admin" ) return false;
+	return true;
+
+} ) );
+
+router.get( "/", function (req, res, next ) {
+		
+	return res.sendFile( path.join( __dirname + "/../html/admin.html" ) );
+
+} );
+
+router.get( "/pending", function ( req, res, next ) {
+		
+	var result = [];
+	
+	Vacation.find( { pending: true } ).cursor().on( "data", ( vacation ) => {
+
+		result.push( {
+			user: vacation.user,
+			from: vacation.from,
+			to: vacation.to,
+			comment: vacation.comment,
+			_id: vacation._id
+		} );	
+
+	} ).on( "end", () => {
+
+		var counter = 0;
+
+		for ( var i = 0, length = result.length; i < length; ++i ) {
+			
+			( function ( i ) {	
+
+				User.findOne( { _id: result[i].user } ).exec( ( error, user ) => {
+					
+					if ( error )
+						next( error );
+					
+					result[i].user = user.name;
+
+					counter++;
+					if ( counter == result.length) console.log( result );
+
+				} );
+
+			} ) ( i );
+		
+		}
+
+	});
+
+	
+
+} );
+
+module.exports = router;

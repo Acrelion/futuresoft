@@ -17,7 +17,8 @@ const VacationSchema = new mongoose.Schema( {
 		required: true
 	},
 
-	comment: String
+	comment: String,
+	status: String
 
 } );
 

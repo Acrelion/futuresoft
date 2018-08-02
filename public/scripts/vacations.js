@@ -1,131 +1,96 @@
 $( document ).ready( function () {
 	"use strict";
 
-	var name = undefined;
 	var events = undefined;
 
-	const dates_display = {
+	var view = MSJS.UI.view.extend( {} );
+	var model = MSJS.UI.model.extend( { view: view } );
 
-		$element: $( "#dates-off-content" ),
-		event_num: 0,
+	view.render( "#dates-off", MSJS.renderers.mustache );
 
-		render: function ( events ) {
-
-			var own_events = false;
-			
-			
-			for ( let event of events )
-				if ( event.title.startsWith( name ) ) {
-					this.add( event.start, event.end, event.id );
-					own_events = true
-				}
-				
-		},
+	view.render( "#dates-off-content", function( state, next ) {
 		
-		add: function ( from , to, id ) {
-			var el = $( "<div>" );
-			var button = $( "<div>" );
+		var index = 0;
 
-			if ( this.event_num === 0 )
-				this.$element.empty();
+		$( ".dates-remove" ).click( function ( event ) {
+			$( this ).parent().slideUp();
+			var index = $( this ).parent().index();
+			model.send( "/vacations/remove", { id: state.days[index].id } );
+		} );
+ 
+		for ( let item of state.days ) {
+			var btn = $( "#dates-off-content" ).children().eq( index ).children( ".dates-remove" );
 
-			++ this.event_num;
+			if ( item.status === "pending" )
+				continue;
 
-			button.click( ( event ) => {
+			if ( item.status === "rejected" )
+				$( "#dates-off-content" ).children().eq( index ).attr( "class", "rejected" ); 	
+		
+			if ( item.status === "accepted" )
+				$( "#dates-off-content" ).children().eq( index ).attr( "class", "accepted" );
 
-				$.ajax( {
+			btn.remove();	
 
-					url: "/vacations/remove",
-					type: "post",
-
-					data: {
-						id: id
-					},
-
-					success: ( response ) => {
-						el.remove();
-						-- this.event_num;
-						console.log( this.event_num );
-						if ( this.event_num === 0 ) {
-							this.$element.empty();
-							this.$element.append( "No days off planned." );
-						}
-						console.log( events );
-						for ( let event of events )
-							if ( event.id === id )
-								events.splice( events.indexOf( event ), 1 );
-						console.log( events );
-						$( "#calendar" ).fullCalendar( "removeEvents", id );
-					}
-
-				} );					
-	
-			} );
-
-			el.text( "From: " + from + " To: " + to );
-			el.append( button );
-			this.$element.append( el );	
-
+			++index;	
 		}
-
-	};
-
-	$.ajax( {
-
-		url: "/vacations",	
-		type: "get",
-
-		success: function ( response ) {
-			name = response.name;
-			events = response.events;
-
-			dates_display.render( response.events );
-			$( "#intro-text" ).html( "Hello, <b>" +  response.name + "</b>");
-			$( "#calendar" ).fullCalendar( {
-				height: "parent",
-				events: response.events,
-				eventRender: function ( event, element, view ) {
-					if ( event.title.startsWith( name ) ) {
-						element.css( "background-color", "#009933" );
-					} else {
-						element.css( "background-color", "#0000cc" );
-					}
-				}
-			} );
-		}
+		next();
 
 	} );
 
-	$( "[data-toggle='datepicker']" ).datepicker();
+	view.render( "#intro-text", MSJS.renderers.mustache );
+	view.render( "#calendar", function ( state, next ) {
+		
+		this.fullCalendar( {
+			height: "parent",
+			events: state.events,
+			eventRender: function ( event, element, view ) {
+				if ( event.end.isBefore( moment() ) ) {
+					element.css( "background-color", "#9f9f9f" );
+					return;
+				}
+				if ( event.user_id === state.id )
+					element.css( "background-color", "#8eb209" );
+				else
+					element.css( "background-color", "#0055cc" );
+			},
 
-	$( "#date-submit" ).click( function ( event ) {
+			eventAfterAllRender: function ( view ) {
+				$( "#loader-wrapper" ).fadeOut();
+			}
+
+		} );
+
+	} );
+
+	view.event( "#date-submit", "click", function ( event, state ) {
+	
 		const from = $( "#date-from" ).val();
 		const to = $( "#date-to" ).val();
 		const comment = $( "#date-comment" ).val();
 
-		var num_overlap = 0;
 		var event_overlap = [];
+		var num_overlap = 0;
+		
+		for ( let event of state.events )
+			if ( check_overlap ( event, { start: from, end: to } ) ) {
 
-		// !!! isSame bug... basically this whole shit need to be cleaned up
+				if ( event.user_id === state.id )
+					return message_popup.add( "Your selected dates overlap... please choose different ones.", "#ff1c00" );
 
-		for ( let event of events ) 
-				if ( moment( event.start ).isBefore( to ) &&
-					 moment( from ).isBefore( event.end ) ) {
-
-						if ( event.title.startsWith( name ) )
-							return message_popup.add( "Your selected dates overlap... please choose different ones.", "#e60000" );
-
-						if ( num_overlap === 0) {
-
-							event_overlap.push( event );
-							num_overlap ++;
-
-						} else for ( let overlap of event_overlap )
-							if ( moment( event.start ).isBefore( overlap.end ) &&
-					 			moment( overlap.start ).isBefore( event.end ) ) 
-									return message_popup.add( "Sorry... your dates are overlapping with two or more of your collegues.", "#e60000" );
-
+				if ( num_overlap === 0 ) {
+					++num_overlap;
+					event_overlap.push( event );
+				} else for ( let overlap of event_overlap ) {
+					if ( check_overlap ( event, overlap ) ) {
+						++num_overlap;
+						event_overlap.push( event );
+					}
+					if ( num_overlap === 2 )
+						return message_popup.add( "Sorry... your dates are overlapping with two or more of your collegues.", "#ff1c00" );
 				}
+
+			}
 
 		$.ajax( {
 
@@ -139,27 +104,58 @@ $( document ).ready( function () {
 			},
 
 			success: function ( response ) {
-				console.log( response );
 	
 				let event= {
-					title: comment ? name + " (" + comment + ")" : name,
 					start: from,
 					end: to,
+					status: "pending",
 					id: response.id,
-					allDay: true
-				}
+					user_id: state.id
+				};
 
-				$( "#calendar" ).fullCalendar( "renderEvent", event, true );
+				state.events.push( event );
+				var date = $( "<div>" );
+				var remove = $( "<div>", { "class": "dates-remove" } );
+				remove.click( function ( event ) {
+					$( this ).parent().slideUp();
+					model.send( "/vacations/remove", { id: response.id } );
+				} );
+				date.html( "From: " + from + ", To:" + to + "</br>" + "<small>pending</small>" );
+				date.append( remove );
+				$( "#dates-off-content" ).append( date );	
 
-				events.push( event );	
-
-				dates_display.add( from, to, response.id );
-					
 			}
 		
 		} );
 
 	} );
+
+	model.request( "/vacations", function ( state, response ) {
+
+		state.name = response.name;
+		state.events = [];
+		for ( let event of response.events )
+			if ( event.status === "accepted" )
+				state.events.push( event );
+		state.id = response.id;
+		state.days = [];
+		for ( let event of response.events )
+			if ( event.user_id === state.id && moment( event.end ).isAfter( moment() ) )
+				state.days.push( event );
+
+		
+	} );
+
+	const check_overlap = function ( one, two ) {
+		if ( ( moment( one.start ).isBefore( two.end ) 
+			|| moment( one.start ).isSame( two.start ) ) &&
+			( moment( two.start ).isBefore( one.end ) 
+			||  moment( two.end ).isSame( one.end )  ) ) return true;
+
+		return false;
+	} 
+
+	$( "[data-toggle='datepicker']" ).datepicker();
 
 	$ ( "#date-from" ).datepicker( "setStartDate", new Date() );
 
